@@ -1,12 +1,5 @@
-"""
-Аггрегация данных. Версия 3
-"""
-
-import os
 import pandas as pd
 import numpy as np
-import datetime
-import tqdm
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -139,38 +132,3 @@ def get_user_url_cnt(data: pd.DataFrame) -> pd.DataFrame:
         .agg({'url_host': 'nunique'}) \
         .rename(columns={'url_host': 'url_host_cnt'})
     return df_url_cnt
-
-
-DATA_FILE = '../competition_data_final_pqt'
-
-
-if __name__ == "__main__":
-    for file in tqdm.tqdm(os.listdir(DATA_FILE)):
-        if file.endswith('.parquet'):
-            df = pd.read_parquet(f'{DATA_FILE}/{file}', engine='pyarrow')
-
-            df['domain'] = df.url_host.transform(lambda x: x.split('.')[-1])
-
-            data_part_day = get_data_part_day(df)
-            data_days = get_data_days(df)
-            data_user_model = get_user_model_price(df)
-            data_city_cnt = get_user_city_cnt(df)
-            data_url_cnt = get_user_url_cnt(df)
-
-            df_final = data_part_day.merge(data_days, how='left', on='user_id') \
-                .merge(data_user_model, how='left', on='user_id') \
-                .merge(data_city_cnt, how='left', on='user_id') \
-                .merge(data_url_cnt, how='left', on='user_id')
-
-            df_final.name = file[:10]
-
-            out_name = f'data_agg_{df_final.name}'
-
-            d = str(datetime.date.today())
-            out_dir = 'data_agg' + '/' + d
-            if not os.path.exists(out_dir):
-                os.mkdir(out_dir)
-
-            final_path = os.path.join(out_dir, out_name) + '.csv'
-
-            df_final.to_csv(final_path, encoding='utf-8', index=False)
