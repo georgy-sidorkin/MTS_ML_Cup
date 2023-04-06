@@ -78,7 +78,7 @@ def get_metrics_multiclass(y_test_bin, y_test, y_pred, y_prob, name,
     return df_metrics
 
 
-def check_overfitting_multiclass(model, X_train, y_train_bin, X_test, y_test_bin, type_multi='ovo'):
+def check_overfitting_multiclass(model, X_train, y_train, X_test, y_test):
     """
     Проверка на overfitting для мультиклассовой классификации
     :param model: обученная модель
@@ -86,14 +86,21 @@ def check_overfitting_multiclass(model, X_train, y_train_bin, X_test, y_test_bin
     :param y_train_bin: бинаризованная целевая переменная train
     :param X_test: матрица объект-признак test
     :param y_test_bin: бинаризованная целевая переменная test
-    :param type_multi: тип многоклассовой классификации для ROC-AUC (ovo/ovr)
     :return: None
     """
-    roc_auc_train = m.roc_auc_score(y_train_bin, model.predict_proba(X_train), multi_class=type_multi)
-    roc_auc_test = m.roc_auc_score(y_test_bin, model.predict_proba(X_test), multi_class=type_multi)
+    f1_micro_train = m.f1_score(y_train, model.predict(X_train), average='micro')
+    f1_micro_test = m.f1_score(y_test, model.predict(X_test), average='micro')
+    f1_macro_train = m.f1_score(y_train, model.predict(X_train), average='macro')
+    f1_macro_test = m.f1_score(y_test, model.predict(X_test), average='macro')
 
-    print("ROC-AUC train = %.3f" % roc_auc_train)
-    print("ROC-AUC test = %.3f" % roc_auc_test)
+    print("f1-micro train = %.3f" % f1_micro_train)
+    print("f1-micro test = %.3f" % f1_micro_test)
     print(
-        f'delta = {round((roc_auc_train - roc_auc_test) / roc_auc_test * 100, 2)}%'
+        f'delta = {round((f1_micro_train - f1_micro_test) / f1_micro_test * 100, 2)}%'
+    )
+    print()
+    print("f1-macro train = %.3f" % f1_macro_train)
+    print("f1-macro test = %.3f" % f1_macro_test)
+    print(
+        f'delta = {round((f1_macro_train - f1_macro_test) / f1_macro_test * 100, 2)}%'
     )
