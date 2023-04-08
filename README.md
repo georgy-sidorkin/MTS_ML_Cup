@@ -54,3 +54,6 @@ https://ods.ai/competitions/mtsmlcup
 4. baseline_embeddings.ipynb - бейзлан модели с эмбеддингами
 5. model_tuning.ipynb - тюнинг наиболее перспективных моделей
 6. gender_prediction_stacking.ipynb - стекинг моделей для предсказания пола
+
+
+Итоговое место 210 из 510, leaderboard score 1,5629284013
