@@ -73,6 +73,7 @@ def get_metrics_multiclass(y_test_bin, y_test, y_pred, y_prob, name,
     df_metrics['Recall_macro'] = m.recall_score(y_test, y_pred, average='macro')
     df_metrics['F1_micro'] = m.f1_score(y_test, y_pred, average='micro')
     df_metrics['F1_macro'] = m.f1_score(y_test, y_pred, average='macro')
+    df_metrics['F1_weighted'] = m.f1_score(y_test, y_pred, average='weighted')
     df_metrics['Logloss'] = m.log_loss(y_test, y_prob)
 
     return df_metrics
@@ -88,19 +89,11 @@ def check_overfitting_multiclass(model, X_train, y_train, X_test, y_test):
     :param y_test_bin: бинаризованная целевая переменная test
     :return: None
     """
-    f1_micro_train = m.f1_score(y_train, model.predict(X_train), average='micro')
-    f1_micro_test = m.f1_score(y_test, model.predict(X_test), average='micro')
-    f1_macro_train = m.f1_score(y_train, model.predict(X_train), average='macro')
-    f1_macro_test = m.f1_score(y_test, model.predict(X_test), average='macro')
+    f1_weighted_train = m.f1_score(y_train, model.predict(X_train), average='weighted')
+    f1_weighted_test = m.f1_score(y_test, model.predict(X_test), average='weighted')
 
-    print("f1-micro train = %.3f" % f1_micro_train)
-    print("f1-micro test = %.3f" % f1_micro_test)
+    print("f1-weighted train = %.3f" % f1_weighted_train)
+    print("f1-weighted test = %.3f" % f1_weighted_test)
     print(
-        f'delta = {round((f1_micro_train - f1_micro_test) / f1_micro_test * 100, 2)}%'
-    )
-    print()
-    print("f1-macro train = %.3f" % f1_macro_train)
-    print("f1-macro test = %.3f" % f1_macro_test)
-    print(
-        f'delta = {round((f1_macro_train - f1_macro_test) / f1_macro_test * 100, 2)}%'
+        f'delta = {round((f1_weighted_train - f1_weighted_test) / f1_weighted_test * 100, 2)}%'
     )
