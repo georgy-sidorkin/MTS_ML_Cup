@@ -56,4 +56,6 @@ https://ods.ai/competitions/mtsmlcup
 6. gender_prediction_stacking.ipynb - стекинг моделей для предсказания пола
 
 
-**Итоговое место 210 из 510, leaderboard score 1,5629284013**
+**Leaderboard score 1,5629284013**
+
+**Итоговое место 210 из 510**
